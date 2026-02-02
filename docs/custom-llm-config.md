@@ -20,7 +20,7 @@ Add to `openclaw.json` or `~/.openclaw/<agent-id>/models.json`:
 ```json5
 {
   models: {
-    mode: "merge",  // "merge" keeps built-in providers, "replace" uses only custom
+    mode: "merge", // "merge" keeps built-in providers, "replace" uses only custom
     providers: {
       "my-custom": {
         baseUrl: "https://api.your-provider.com/v1",
@@ -30,27 +30,29 @@ Add to `openclaw.json` or `~/.openclaw/<agent-id>/models.json`:
           {
             id: "your-model-id",
             name: "Your Model Name",
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "my-custom/your-model-id" }
-    }
-  }
+      model: { primary: "my-custom/your-model-id" },
+    },
+  },
 }
 ```
 
 ### Configuration Fields
 
 **Required fields**:
+
 - `baseUrl`: Complete LLM service URL (usually ends with `/v1`)
 - `apiKey`: API key (or use `"${ENV_VAR}"` to reference environment variable)
 - `models`: List of model definitions with at least `id` and `name`
 
 **Optional fields**:
+
 - `api`: API type (default `"openai-completions"`)
   - `"openai-completions"` - OpenAI Completions API
   - `"openai-responses"` - OpenAI Chat/Responses API
@@ -62,6 +64,7 @@ Add to `openclaw.json` or `~/.openclaw/<agent-id>/models.json`:
 - `headers`: Custom HTTP headers (for special authentication needs)
 
 **Model definition optional fields**:
+
 - `reasoning`: Whether it's a reasoning model (default `false`)
 - `input`: Supported input types (default `["text"]`, optional `["text", "image"]`)
 - `cost`: Cost configuration (default all `0`)
@@ -92,20 +95,21 @@ LM Studio is the recommended local LLM runtime:
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "lmstudio/minimax-m2.1-gs32" }
-    }
-  }
+      model: { primary: "lmstudio/minimax-m2.1-gs32" },
+    },
+  },
 }
 ```
 
 **Setup steps**:
+
 1. Install LM Studio: https://lmstudio.ai
 2. Download and load a model (MiniMax M2.1 full version recommended)
 3. Start the local server in LM Studio
@@ -127,9 +131,9 @@ ollama pull llama3.3
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/llama3.3" }
-    }
-  }
+      model: { primary: "ollama/llama3.3" },
+    },
+  },
 }
 ```
 
@@ -154,16 +158,16 @@ Deploy your own models with vLLM:
             name: "Your Model",
             contextWindow: 120000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "vllm/your-model" }
-    }
-  }
+      model: { primary: "vllm/your-model" },
+    },
+  },
 }
 ```
 
@@ -174,14 +178,14 @@ Enterprise private deployment:
 ```json5
 {
   models: {
-    mode: "replace",  // Use only custom providers, no cloud services
+    mode: "replace", // Use only custom providers, no cloud services
     providers: {
       enterprise: {
         baseUrl: "https://internal-llm.company.com/v1",
-        apiKey: "${ENTERPRISE_LLM_KEY}",  // Read from environment variable
+        apiKey: "${ENTERPRISE_LLM_KEY}", // Read from environment variable
         api: "openai-completions",
         headers: {
-          "X-Custom-Header": "value"  // Custom auth header
+          "X-Custom-Header": "value", // Custom auth header
         },
         models: [
           {
@@ -189,16 +193,16 @@ Enterprise private deployment:
             name: "Company Model V1",
             contextWindow: 128000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "enterprise/company-model-v1" }
-    }
-  }
+      model: { primary: "enterprise/company-model-v1" },
+    },
+  },
 }
 ```
 
@@ -207,7 +211,7 @@ Enterprise private deployment:
 ```json5
 {
   models: {
-    mode: "merge",  // Keep cloud services as backup
+    mode: "merge", // Keep cloud services as backup
     providers: {
       local: {
         baseUrl: "http://127.0.0.1:8000/v1",
@@ -219,19 +223,19 @@ Enterprise private deployment:
             name: "Local Model",
             contextWindow: 120000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
       model: {
         primary: "local/local-model",
-        fallbacks: ["anthropic/claude-sonnet-4-5"]  // Use cloud when local fails
-      }
-    }
-  }
+        fallbacks: ["anthropic/claude-sonnet-4-5"], // Use cloud when local fails
+      },
+    },
+  },
 }
 ```
 
@@ -247,11 +251,13 @@ Enterprise private deployment:
     providers: {
       custom: {
         baseUrl: "https://api.custom.com/v1",
-        apiKey: "${MY_CUSTOM_API_KEY}",  // Read from environment
-        models: [/* ... */]
-      }
-    }
-  }
+        apiKey: "${MY_CUSTOM_API_KEY}", // Read from environment
+        models: [
+          /* ... */
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -271,17 +277,19 @@ source ~/.profile
 ```json5
 {
   env: {
-    MY_CUSTOM_API_KEY: "sk-your-key"
+    MY_CUSTOM_API_KEY: "sk-your-key",
   },
   models: {
     providers: {
       custom: {
         baseUrl: "https://api.custom.com/v1",
         apiKey: "${MY_CUSTOM_API_KEY}",
-        models: [/* ... */]
-      }
-    }
-  }
+        models: [
+          /* ... */
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -340,6 +348,7 @@ openclaw message send "Hello, this is a test message"
 **Symptom**: Cannot connect to LLM service
 
 **Checklist**:
+
 1. Confirm service endpoint is running: `curl http://127.0.0.1:1234/v1/models`
 2. Check firewall settings
 3. Verify `baseUrl` is correct (note port and path)
@@ -350,6 +359,7 @@ openclaw message send "Hello, this is a test message"
 **Symptom**: 401 or 403 errors
 
 **Checklist**:
+
 1. Verify API key is correct
 2. Check environment variable is set: `echo $MY_CUSTOM_API_KEY`
 3. Confirm key format matches provider requirements
@@ -360,6 +370,7 @@ openclaw message send "Hello, this is a test message"
 **Symptom**: Model not found error
 
 **Solutions**:
+
 1. Check service endpoint's supported models list
 2. Ensure config `id` matches actual model ID
 3. For LM Studio, ensure model is loaded
@@ -369,6 +380,7 @@ openclaw message send "Hello, this is a test message"
 **Symptom**: Context exceeds limit
 
 **Solutions**:
+
 1. Lower `contextWindow` value in config
 2. Or increase server's context limit
 3. Enable conversation compaction
@@ -399,11 +411,17 @@ openclaw message send "Hello, this is a test message"
 {
   models: {
     providers: {
-      "provider1": { /* ... */ },
-      "provider2": { /* ... */ },
-      "provider3": { /* ... */ }
-    }
-  }
+      provider1: {
+        /* ... */
+      },
+      provider2: {
+        /* ... */
+      },
+      provider3: {
+        /* ... */
+      },
+    },
+  },
 }
 ```
 
@@ -414,17 +432,20 @@ openclaw message send "Hello, this is a test message"
 ```json5
 {
   models: {
-    mode: "replace",  // Use only custom providers
+    mode: "replace", // Use only custom providers
     providers: {
-      local: { /* ... */ }
-    }
-  }
+      local: {
+        /* ... */
+      },
+    },
+  },
 }
 ```
 
 ### Q: Which API formats are supported?
 
 **A**: OpenClaw supports multiple API formats:
+
 - OpenAI Completions API (`openai-completions`)
 - OpenAI Responses API (`openai-responses`)
 - Anthropic Messages API (`anthropic-messages`)

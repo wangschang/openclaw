@@ -20,7 +20,7 @@ OpenClaw 完全支持使用自定义 LLM 地址和 API 密钥进行配置，**�
 ```json5
 {
   models: {
-    mode: "merge",  // "merge" 保留内置提供商，"replace" 仅使用自定义提供商
+    mode: "merge", // "merge" 保留内置提供商，"replace" 仅使用自定义提供商
     providers: {
       "my-custom": {
         baseUrl: "https://api.your-provider.com/v1",
@@ -30,27 +30,29 @@ OpenClaw 完全支持使用自定义 LLM 地址和 API 密钥进行配置，**�
           {
             id: "your-model-id",
             name: "Your Model Name",
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "my-custom/your-model-id" }
-    }
-  }
+      model: { primary: "my-custom/your-model-id" },
+    },
+  },
 }
 ```
 
 ### 配置说明
 
 **必需字段**：
+
 - `baseUrl`: LLM 服务的完整 URL（通常以 `/v1` 结尾）
 - `apiKey`: API 密钥（或使用 `"${ENV_VAR}"` 引用环境变量）
 - `models`: 模型定义列表，至少包含 `id` 和 `name`
 
 **可选字段**：
+
 - `api`: API 类型（默认 `"openai-completions"`）
   - `"openai-completions"` - OpenAI Completions API
   - `"openai-responses"` - OpenAI Chat/Responses API
@@ -62,6 +64,7 @@ OpenClaw 完全支持使用自定义 LLM 地址和 API 密钥进行配置，**�
 - `headers`: 自定义 HTTP 头（用于特殊认证需求）
 
 **模型定义可选字段**：
+
 - `reasoning`: 是否为推理模型（默认 `false`）
 - `input`: 支持的输入类型（默认 `["text"]`，可选 `["text", "image"]`）
 - `cost`: 成本配置（默认全为 `0`）
@@ -92,20 +95,21 @@ LM Studio 是最推荐的本地 LLM 运行方案：
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "lmstudio/minimax-m2.1-gs32" }
-    }
-  }
+      model: { primary: "lmstudio/minimax-m2.1-gs32" },
+    },
+  },
 }
 ```
 
 **设置步骤**：
+
 1. 安装 LM Studio: https://lmstudio.ai
 2. 下载并加载模型（推荐 MiniMax M2.1 完整版本）
 3. 在 LM Studio 中启动本地服务器
@@ -127,9 +131,9 @@ ollama pull llama3.3
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/llama3.3" }
-    }
-  }
+      model: { primary: "ollama/llama3.3" },
+    },
+  },
 }
 ```
 
@@ -154,16 +158,16 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
             name: "Your Model",
             contextWindow: 120000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "vllm/your-model" }
-    }
-  }
+      model: { primary: "vllm/your-model" },
+    },
+  },
 }
 ```
 
@@ -174,14 +178,14 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
 ```json5
 {
   models: {
-    mode: "replace",  // 仅使用自定义提供商，不使用任何云服务
+    mode: "replace", // 仅使用自定义提供商，不使用任何云服务
     providers: {
       enterprise: {
         baseUrl: "https://internal-llm.company.com/v1",
-        apiKey: "${ENTERPRISE_LLM_KEY}",  // 从环境变量读取
+        apiKey: "${ENTERPRISE_LLM_KEY}", // 从环境变量读取
         api: "openai-completions",
         headers: {
-          "X-Custom-Header": "value"  // 自定义认证头
+          "X-Custom-Header": "value", // 自定义认证头
         },
         models: [
           {
@@ -189,16 +193,16 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
             name: "Company Model V1",
             contextWindow: 128000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
-      model: { primary: "enterprise/company-model-v1" }
-    }
-  }
+      model: { primary: "enterprise/company-model-v1" },
+    },
+  },
 }
 ```
 
@@ -207,7 +211,7 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
 ```json5
 {
   models: {
-    mode: "merge",  // 保留云服务作为备用
+    mode: "merge", // 保留云服务作为备用
     providers: {
       local: {
         baseUrl: "http://127.0.0.1:8000/v1",
@@ -219,19 +223,19 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
             name: "Local Model",
             contextWindow: 120000,
             maxTokens: 8192,
-          }
-        ]
-      }
-    }
+          },
+        ],
+      },
+    },
   },
   agents: {
     defaults: {
       model: {
         primary: "local/local-model",
-        fallbacks: ["anthropic/claude-sonnet-4-5"]  // 本地失败时使用云服务
-      }
-    }
-  }
+        fallbacks: ["anthropic/claude-sonnet-4-5"], // 本地失败时使用云服务
+      },
+    },
+  },
 }
 ```
 
@@ -247,11 +251,13 @@ Ollama 在 `http://127.0.0.1:11434/v1` 运行时会自动检测，无需额外�
     providers: {
       custom: {
         baseUrl: "https://api.custom.com/v1",
-        apiKey: "${MY_CUSTOM_API_KEY}",  // 从环境变量读取
-        models: [/* ... */]
-      }
-    }
-  }
+        apiKey: "${MY_CUSTOM_API_KEY}", // 从环境变量读取
+        models: [
+          /* ... */
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -271,17 +277,19 @@ source ~/.profile
 ```json5
 {
   env: {
-    MY_CUSTOM_API_KEY: "sk-your-key"
+    MY_CUSTOM_API_KEY: "sk-your-key",
   },
   models: {
     providers: {
       custom: {
         baseUrl: "https://api.custom.com/v1",
         apiKey: "${MY_CUSTOM_API_KEY}",
-        models: [/* ... */]
-      }
-    }
-  }
+        models: [
+          /* ... */
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -340,6 +348,7 @@ openclaw message send "你好，这是一条测试消息"
 **症状**：无法连接到 LLM 服务
 
 **检查清单**：
+
 1. 确认服务端点正在运行：`curl http://127.0.0.1:1234/v1/models`
 2. 检查防火墙设置
 3. 验证 `baseUrl` 是否正确（注意端口号和路径）
@@ -350,6 +359,7 @@ openclaw message send "你好，这是一条测试消息"
 **症状**：401 或 403 错误
 
 **检查清单**：
+
 1. 验证 API 密钥是否正确
 2. 检查环境变量是否已设置：`echo $MY_CUSTOM_API_KEY`
 3. 确认密钥格式与服务商要求一致
@@ -360,6 +370,7 @@ openclaw message send "你好，这是一条测试消息"
 **症状**：模型未找到错误
 
 **解决方案**：
+
 1. 检查服务端点支持的模型列表
 2. 确认配置中的 `id` 与实际模型 ID 一致
 3. 对于 LM Studio，确保模型已加载
@@ -369,6 +380,7 @@ openclaw message send "你好，这是一条测试消息"
 **症状**：上下文超出限制
 
 **解决方案**：
+
 1. 降低配置中的 `contextWindow` 值
 2. 或者提高服务器的上下文限制
 3. 启用对话压缩功能
@@ -399,11 +411,17 @@ openclaw message send "你好，这是一条测试消息"
 {
   models: {
     providers: {
-      "provider1": { /* ... */ },
-      "provider2": { /* ... */ },
-      "provider3": { /* ... */ }
-    }
-  }
+      provider1: {
+        /* ... */
+      },
+      provider2: {
+        /* ... */
+      },
+      provider3: {
+        /* ... */
+      },
+    },
+  },
 }
 ```
 
@@ -414,17 +432,20 @@ openclaw message send "你好，这是一条测试消息"
 ```json5
 {
   models: {
-    mode: "replace",  // 仅使用自定义提供商
+    mode: "replace", // 仅使用自定义提供商
     providers: {
-      local: { /* ... */ }
-    }
-  }
+      local: {
+        /* ... */
+      },
+    },
+  },
 }
 ```
 
 ### Q: 支持哪些 API 格式？
 
 **A**: OpenClaw 支持多种 API 格式：
+
 - OpenAI Completions API (`openai-completions`)
 - OpenAI Responses API (`openai-responses`)
 - Anthropic Messages API (`anthropic-messages`)

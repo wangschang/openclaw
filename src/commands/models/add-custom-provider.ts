@@ -1,10 +1,11 @@
 import { cancel as clackCancel, isCancel, select, text } from "@clack/prompts";
+import type { ModelApi, ModelProviderConfig } from "../../config/types.models.js";
 import type { RuntimeEnv } from "../../runtime.js";
-import { readConfig, updateConfig } from "../../config/config.js";
+import { normalizeProviderId } from "../../agents/model-selection.js";
+import { loadConfig } from "../../config/config.js";
 import { logConfigUpdated } from "../../config/logging.js";
 import { stylePromptHint, stylePromptMessage } from "../../terminal/prompt-style.js";
-import type { ModelApi, ModelProviderConfig } from "../../config/types.models.js";
-import { normalizeProviderId } from "../../agents/model-selection.js";
+import { updateConfig } from "./shared.js";
 
 const SUPPORTED_APIS: Array<{ value: ModelApi; label: string; hint?: string }> = [
   {
@@ -236,7 +237,7 @@ export async function modelsAddCustomProviderCommand(
         process.exit(0);
       }
 
-      api = apiTypeChoice as ModelApi;
+      api = String(apiTypeChoice) as ModelApi;
     }
 
     // Step 6: Model ID
@@ -300,7 +301,7 @@ export async function modelsAddCustomProviderCommand(
   modelName = modelName || modelId;
 
   // Check if provider already exists
-  const currentConfig = await readConfig();
+  const currentConfig = loadConfig();
   const existingProvider = currentConfig.models?.providers?.[normalizedProvider];
 
   if (existingProvider && !opts.yes) {
