@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import {
   githubCopilotLoginCommand,
+  modelsAddCustomProviderCommand,
   modelsAliasesAddCommand,
   modelsAliasesListCommand,
   modelsAliasesRemoveCommand,
@@ -111,6 +112,23 @@ export function registerModelsCli(program: Command) {
           },
           defaultRuntime,
         );
+      });
+    });
+
+  models
+    .command("add-custom-provider")
+    .description("Add a custom LLM provider (interactive or with flags)")
+    .option("--provider <name>", "Provider name")
+    .option("--base-url <url>", "Base URL for the LLM service")
+    .option("--api-key <key>", "API key (or environment variable reference like ${MY_KEY})")
+    .option("--api <type>", "API type (openai-completions, openai-responses, etc.)")
+    .option("--model-id <id>", "Model ID as returned by the provider")
+    .option("--model-name <name>", "Display name for the model")
+    .option("--preset <name>", "Use a preset (lmstudio, ollama, vllm, custom)")
+    .option("--yes", "Skip confirmation prompts", false)
+    .action(async (opts) => {
+      await runModelsCommand(async () => {
+        await modelsAddCustomProviderCommand(opts, defaultRuntime);
       });
     });
 
